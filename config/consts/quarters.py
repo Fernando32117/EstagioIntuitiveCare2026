@@ -1,0 +1,2 @@
+TRIMESTRES_TO_PROCESS: list[str] = ["1T2025", "2T2025", "3T2025"]
+VALID_QUARTERS: range = range(1, 5)
