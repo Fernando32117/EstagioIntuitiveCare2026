@@ -18,19 +18,6 @@ class AccountFilter:
         self.TARGET_ACCOUNT_CODES = [target_account, target_account[:2]]
 
     def filter(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Filtra apenas despesas com eventos/sinistros.
-
-        Critérios de filtro:
-        1. Código de conta contábil começa com 411 ou 41
-        2. OU descrição contém palavras-chave relacionadas a eventos/sinistros
-
-        Args:
-            df: DataFrame com dados brutos
-
-        Returns:
-            DataFrame filtrado
-        """
         if df.empty:
             return df
 

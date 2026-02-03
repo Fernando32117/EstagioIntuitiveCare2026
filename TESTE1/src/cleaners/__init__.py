@@ -10,21 +10,6 @@ class DataCleaner:
         self.inconsistencies_log: List[Dict] = []
 
     def clean(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Aplica todas as regras de limpeza.
-
-        Estratégias implementadas:
-        1. Remove valores negativos (podem ser erros de contabilização)
-        2. Mantém valores zero (representam ausência de despesa no período)
-        3. Remove duplicatas exatas
-        4. Loga CNPJs com razões sociais inconsistentes
-
-        Args:
-            df: DataFrame a ser limpo
-
-        Returns:
-            DataFrame limpo
-        """
         df_clean = df.copy()
         original_count = len(df_clean)
         df_clean = self._remove_negative_values(df_clean)
@@ -41,14 +26,6 @@ class DataCleaner:
         return df_clean
 
     def _remove_negative_values(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Remove registros com valores negativos.
-
-        Trade-off: Remover vs Marcar
-        - Escolha: Remover
-        - Justificativa: Valores negativos geralmente indicam erros de dados
-        - Zeros são mantidos (podem representar períodos sem despesa)
-        """
         if 'ValorDespesas' not in df.columns:
             return df
 
@@ -89,13 +66,6 @@ class DataCleaner:
         return df.drop_duplicates()
 
     def _detect_razao_social_inconsistencies(self, df: pd.DataFrame):
-        """
-        Detecta CNPJs com múltiplas razões sociais.
-
-        Trade-off: Remover vs Logar
-        - Escolha: Logar (não remover)
-        - Justificativa: Pode ser mudança legítima de razão social
-        """
         if 'CNPJ' not in df.columns or 'RazaoSocial' not in df.columns:
             return
 

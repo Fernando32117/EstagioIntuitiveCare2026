@@ -11,16 +11,6 @@ class FileReader:
     SUPPORTED_ENCODINGS = ["latin1", "utf-8", "cp1252"]
 
     def read(self, path: Path) -> Optional[pd.DataFrame]:
-        """
-        Lê arquivo em múltiplos formatos: CSV, TXT, XLSX.
-        Identifica automaticamente separador e encoding.
-
-        Args:
-            path: Caminho do arquivo a ser lido
-
-        Returns:
-            DataFrame com os dados ou None se falhar
-        """
         extension = path.suffix.lower()
 
         if extension in [".csv", ".txt"]:

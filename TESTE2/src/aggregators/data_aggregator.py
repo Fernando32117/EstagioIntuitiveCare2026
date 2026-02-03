@@ -1,16 +1,3 @@
-"""
-Agregador de dados com análises estatísticas.
-
-Trade-off implementado: Ordenação in-memory com pandas (em vez de ordenação externa)
-- Prós: Simples, rápido, totalmente integrado com pandas, funciona bem até ~10M registros
-- Contras: Pode usar muita memória com datasets gigantescos
-
-Justificativa: Para os dados da ANS (~400k registros após agregação), a ordenação
-in-memory é mais que suficiente. Pandas implementa quicksort/mergesort eficientes.
-Só seria necessário ordenação externa (sort em disco) para datasets > 100M registros
-ou com memória RAM muito limitada (< 4GB).
-"""
-
 import logging
 import pandas as pd
 import numpy as np
@@ -34,15 +21,6 @@ class DataAggregator:
         }
 
     def aggregate(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Agrega dados por RazaoSocial e UF, calculando:
-        - Total de despesas
-        - Média de despesas por trimestre
-        - Desvio padrão das despesas
-
-        Returns:
-            DataFrame agregado e ordenado por valor total (decrescente)
-        """
         self.aggregation_stats['original_records'] = len(df)
 
         if 'UF' not in df.columns:

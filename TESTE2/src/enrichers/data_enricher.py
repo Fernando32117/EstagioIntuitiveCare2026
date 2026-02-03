@@ -1,15 +1,3 @@
-"""
-Enriquecedor de dados com informações cadastrais da ANS.
-
-Trade-off implementado: Join em memória com pandas (em vez de streaming/chunked)
-- Prós: Simples, rápido para datasets médios, suporte nativo do pandas
-- Contras: Pode usar muita memória com datasets muito grandes
-
-Justificativa: Os dados da ANS (~400k registros) cabem confortavelmente em memória
-de máquinas modernas (< 100MB). A simplicidade do código vale a pena. Se os dados
-crescerem significativamente (>10M registros), seria legal migrar para outro processamento.
-"""
-
 import logging
 import pandas as pd
 import requests
@@ -93,17 +81,6 @@ class DataEnricher:
             return False
 
     def enrich(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Enriquece o DataFrame com dados cadastrais (RegistroANS, Modalidade, UF).
-
-        Estratégia de Join:
-        - LEFT JOIN: Mantém todos os registros do consolidado
-        - Registros sem match terão valores nulos nas colunas enriquecidas
-        - Múltiplos matches: mantém o primeiro (pode haver duplicatas no cadastro)
-
-        Returns:
-            DataFrame enriquecido com colunas: RegistroANS, Modalidade, UF
-        """
         if self.cadastro_df is None:
             logger.error(
                 "Cadastro não carregado. Execute load_cadastro() primeiro.")

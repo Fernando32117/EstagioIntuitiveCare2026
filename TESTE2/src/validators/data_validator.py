@@ -1,15 +1,3 @@
-"""
-Validador de dados com múltiplas estratégias de validação.
-
-Trade-off implementado: MARCAR registros inválidos e manter (em vez de remover)
-- Prós: Preserva todos os dados para análise posterior, permite rastreabilidade
-- Contras: Requer tratamento cuidadoso em análises para não contaminar resultados
-
-Justificativa: Em processos de validação de dados públicos, é importante manter
-transparência sobre quais registros têm problemas. Remover silenciosamente pode
-ocultar problemas sistemáticos nos dados originais da ANS.
-"""
-
 import logging
 import pandas as pd
 import re
@@ -53,12 +41,6 @@ class DataValidator:
         return df
 
     def _validate_cnpj(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Valida CNPJ/REG_ANS.
-
-        Aceita tanto CNPJ (14 dígitos) quanto REG_ANS (6 dígitos) da ANS.
-        Estratégia: MARCAR como inválido apenas se não for nem CNPJ nem REG_ANS válido.
-        """
         for idx, row in df.iterrows():
             identificador = str(row['CNPJ']).strip()
             id_numbers = re.sub(r'[^0-9]', '', identificador)
@@ -120,13 +102,6 @@ class DataValidator:
         return df
 
     def _validate_razao_social(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Valida se a Razão Social não está vazia.
-
-        NOTA: No TESTE 1, a Razão Social vem vazia dos arquivos da ANS.
-        Será preenchida no enriquecimento (TESTE 2.2).
-        Por isso, não invalidamos registros sem Razão Social.
-        """
         empty_mask = (df['RazaoSocial'].isna()) | (
             df['RazaoSocial'] == '') | (df['RazaoSocial'] == 'NÃO INFORMADO')
         empty_count = empty_mask.sum()
